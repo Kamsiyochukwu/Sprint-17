@@ -135,6 +135,14 @@ def run_experiment(config):
         f1 = f1_score(y_test, y_pred)
         auc = roc_auc_score(y_test, y_prob)
 
+        metrics = {
+            "accuracy": accuracy,
+            "precision": precision,
+            "recall": recall,
+            "f1_score": f1,
+            "auc_roc": auc
+        }
+
         # ── Log metrics ──
         mlflow.log_metric("accuracy", round(accuracy, 4))
         mlflow.log_metric("precision", round(precision, 4))
@@ -166,7 +174,7 @@ def run_experiment(config):
         print(f"\nMLflow Run ID: {run_id}")
         print("View this run in the UI: mlflow ui")
 
-    return run_id
+    return run_id, metrics
 
 if __name__ == "__main__":
     run_experiment(config)
