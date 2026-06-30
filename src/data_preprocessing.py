@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 def validate_dataframe(df, required_columns, target_column):
     """Validate that the dataframe has required columns and is not empty."""
     missing = [col for col in required_columns if col not in df.columns]

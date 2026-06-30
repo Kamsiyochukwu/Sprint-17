@@ -1,0 +1,70 @@
+from configs import config
+
+# Check thresholds
+    if metrics["accuracy"] < config["min_accuracy"]:
+        print(f"\nWARNING: Accuracy {metrics['accuracy']} is below threshold {config['min_accuracy']}")
+    if metrics["f1_score"] < config["min_f1"]:
+        print(f"\nWARNING: F1 {metrics['f1_score']} is below threshold {config['min_f1']}")
+
+# Save model
+    os.makedirs("models", exist_ok=True)
+    model_path = "models/model.pkl"
+    with open(model_path, "wb") as f:
+        pickle.dump(model, f)
+    print(f"\nModel saved to {model_path}")
+
+    # Save metrics
+    os.makedirs("metrics", exist_ok=True)
+    metrics_path = "metrics/results.json"
+    with open(metrics_path, "w") as f:
+        json.dump(metrics, f, indent=2)
+    print(f"Metrics saved to {metrics_path}")
+
+    return model, metrics
+
+if __name__ == "__main__":
+    metrics = train_model()
+
+    # Exit with error if thresholds not met
+    if metrics["accuracy"] < CONFIG["min_accuracy"]:
+        print(f"\nFAILED: Accuracy below threshold")
+        sys.exit(1)
+    if metrics["f1_score"] < CONFIG["min_f1"]:
+        print(f"\nFAILED: F1 score below threshold")
+        sys.exit(1)
+
+    print("\nAll thresholds passed!")# Check thresholds
+    if metrics["accuracy"] < config["min_accuracy"]:
+        print(f"\nWARNING: Accuracy {metrics['accuracy']} is below threshold {config['min_accuracy']}")
+    if metrics["f1_score"] < config["min_f1"]:
+        print(f"\nWARNING: F1 {metrics['f1_score']} is below threshold {config['min_f1']}")
+
+# Save model
+    os.makedirs("models", exist_ok=True)
+    model_path = "models/model.pkl"
+    with open(model_path, "wb") as f:
+        pickle.dump(model, f)
+    print(f"\nModel saved to {model_path}")
+
+    # Save metrics
+    os.makedirs("metrics", exist_ok=True)
+    metrics_path = "metrics/results.json"
+    with open(metrics_path, "w") as f:
+        json.dump(metrics, f, indent=2)
+    print(f"Metrics saved to {metrics_path}")
+
+    return model, metrics
+
+if __name__ == "__main__":
+    metrics = train_model()
+
+    # Exit with error if thresholds not met
+    if metrics["accuracy"] < CONFIG["min_accuracy"]:
+        print(f"\nFAILED: Accuracy below threshold")
+        sys.exit(1)
+    if metrics["f1_score"] < CONFIG["min_f1"]:
+        print(f"\nFAILED: F1 score below threshold")
+        sys.exit(1)
+
+    print("\nAll thresholds passed!")
+
