@@ -1,5 +1,4 @@
-"data_url": "https://raw.githubusercontent.com/TripleTen-DS/Dataset/refs/heads/main/student_dropout_dataset.csv"
-"target": "Dropout"
+"data_url": "data/student_dropout_dataset.csv"
 "test_size": 0.2
 "random_state": 50
 "n_estimators": 100
@@ -17,3 +16,5 @@
 "gb_n_estimators": 100
 "gb_learning_rate": 0.1
 "gb_max_depth": 3
+
+"target": "Dropout"

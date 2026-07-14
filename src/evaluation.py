@@ -14,10 +14,12 @@ with open("configs/config.yaml", "r") as f:
     config = yaml.safe_load(f)
 
 sys.path.insert(0, os.path.dirname(__file__))
-from model_train import model, X_test, y_test
+from model_train import model
 
 def run_experiment(config):
     """Run a single experiment with the given config, tracked by MLflow."""
+
+    modelplk, X_test, y_test = model(config)
 
     # Set the experiment name so all runs are grouped together
     mlflow.set_experiment("student-dropout-prediction")
@@ -45,8 +47,8 @@ def run_experiment(config):
             mlflow.log_param("max_depth", config["gb_max_depth"])
 
         # ── Evaluate ──
-        y_pred = model.predict(X_test)
-        y_prob = model.predict_proba(X_test)[:, 1]
+        y_pred = modelplk.predict(X_test)
+        y_prob = modelplk.predict_proba(X_test)[:, 1]
 
         accuracy = accuracy_score(y_test, y_pred)
         precision = precision_score(y_test, y_pred)
@@ -70,7 +72,7 @@ def run_experiment(config):
         mlflow.log_metric("auc_roc", round(auc, 4))
 
         # ── Log the trained model as an artifact ──
-        mlflow.sklearn.log_model(model, "model")
+        mlflow.sklearn.log_model(modelplk, "model")
 
         # ── Log the config file as an artifact for reference ──
         config_path = "config_snapshot.json"
@@ -94,20 +96,3 @@ def run_experiment(config):
         print("View this run in the UI: mlflow ui")
 
     return run_id, metrics
-
-if __name__ == "__main__":
-
-    print("Evaluating...")
-    run_experiment(config)
-
-    # Save model
-    os.makedirs("models", exist_ok=True)
-    with open("models/churn_model.pkl", "wb") as f:
-        pickle.dump(model, f)
-    print("Model saved to models/churn_model.pkl")
-
-    # Save metrics
-    os.makedirs("metrics", exist_ok=True)
-    with open("metrics/results.json", "w") as f:
-        json.dump(model.metrics, f, indent=2)
-    print("Metrics saved to metrics/results.json")

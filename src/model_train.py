@@ -5,6 +5,8 @@ import mlflow
 import mlflow.sklearn
 import json
 import os
+import pickle
+from sklearn.preprocessing import LabelEncoder
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.linear_model import LogisticRegression
@@ -19,21 +21,39 @@ sys.path.insert(0, os.path.dirname(__file__))
 from data_preprocessing import validate_dataframe, clean_data, encode_categoricals, check_data_quality
 
 
-
-def load_data(url):
-    df = pd.read_csv(url)
-
-    return df
-
 def load_and_prepare_data(config):
     """Load the student dropout dataset and prepare it for training."""
 
-    df = load_data(config["data_url"])
+    df = pd.read_csv(config["data_url"])
 
-    validate_dataframe(df, config['numeric_columns'] + config['categorical_columns'], config['target'])
-    check_data_quality(df, config["numeric_columns"])
-    df = clean_data(df, config['numeric_columns'], config['categorical_columns'])
-    df = encode_categoricals(df, config['categorical_columns'])
+    # Drop Student_ID since it is not a useful feature
+    df = df.drop(columns=["Student_ID"])
+
+    # Handle missing values
+    numeric_columns = df.select_dtypes(include=[np.number]).columns.tolist()
+
+    if config["handle_missing"] == "median":
+        for col in numeric_columns:
+            df[col] = df[col].fillna(df[col].median())
+        print("Filled missing values with median")
+    elif config["handle_missing"] == "drop":
+        before = len(df)
+        df = df.dropna()
+        print(f"Dropped rows with missing values: {before} -> {len(df)}")
+
+    # Encode categorical columns
+    categorical_columns = df.select_dtypes(include=["object"]).columns.tolist()
+
+    label_encoders = {}
+    for col in categorical_columns:
+        le = LabelEncoder()
+        df[col] = le.fit_transform(df[col].astype(str))
+        label_encoders[col] = le
+
+    validate_dataframe(df, numeric_columns + categorical_columns, config['target'])
+    check_data_quality(df, numeric_columns)
+    df = clean_data(df, numeric_columns, categorical_columns)
+    df = encode_categoricals(df, categorical_columns)
 
     # Separate features and target
     X = df.drop(columns=["Dropout"])
@@ -94,7 +114,3 @@ def model(config):
     model.fit(X_train, y_train)
     
     return model, X_test, y_test
-
-if __name__ == "__main__":
-    print("Training model...")
-    model = model(config)
