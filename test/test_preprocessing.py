@@ -10,13 +10,13 @@ from data_preprocessing import validate_dataframe, clean_data, encode_categorica
 def sample_data():
     """Small dataset that mimics the student dropout data structure."""
     return pd.DataFrame({
-        "Age": [22.0, 20.0, np.nan, 24.0, 19.0, 21.0],
-        "Family_Income": [25000.0, 40000.0, 35000.0, np.nan, 50000.0, 30000.0],
-        "Study_Hours_per_Day": [3.5, 2.0, 4.0, 1.5, 5.0, 3.0],
-        "Attendance_Rate": [85.0, 70.0, 90.0, 65.0, 95.0, 80.0],
-        "Gender": ["Male", "Female", "Male", "Female", "Male", "Female"],
-        "Internet_Access": ["Yes", "Yes", "No", "Yes", "No", "Yes"],
-        "Dropout": [0, 1, 0, 1, 0, 0]
+        "Age": [22.0, 20.0, np.nan, 24.0, 19.0, 21.0, np.nan],
+        "Family_Income": [20000.0, 26000.0, np.nan, 50000.0, 30000.0, np.nan, 35000.0],
+        "Study_Hours_per_Day": [3.5, 4.0, 2.0, 5.0, 1.5, 3.0, 4.5],
+        "Attendance_Rate": [86.0, 92.0, 75.0, 88.0, 65.0, 95.0, 80.0],
+        "Gender": ["Male", "Female", "Female", "Male", "Female", "Male", "Female"],
+        "Internet_Access": ["Yes", "No", "Yes", "Yes", "No", "Yes", "No"],
+        "Dropout": [1, 0, 1, 0, 1, 0, 0]
     })
 
 class TestValidateDataframe:
@@ -64,7 +64,7 @@ class TestCleanData:
 
     def test_fills_with_median(self, sample_data):
         result = clean_data(sample_data, ["Age"], [])
-        # Median of [22, 20, 24, 19, 21] = 21
+        # Median of [22.0, 20.0, np.nan, 24.0, 19.0, 21.0, np.nan] = 21.0
         assert result["Age"].iloc[2] == 21.0
 
     def test_non_null_values_unchanged(self, sample_data):
@@ -93,11 +93,11 @@ class TestDataQuality:
 
     def test_counts_nulls(self, sample_data):
         report = check_data_quality(sample_data, ["Age", "Family_Income"])
-        assert report["total_nulls"] == 2  # one in Age, one in Family_Income
+        assert report["total_nulls"] == 4  # one in Age, one in Family_Income
 
     def test_counts_rows(self, sample_data):
         report = check_data_quality(sample_data, ["Age"])
-        assert report["total_rows"] == 6
+        assert report["total_rows"] == 7
 
     def test_reports_numeric_ranges(self, sample_data):
         report = check_data_quality(sample_data, ["Attendance_Rate"])
