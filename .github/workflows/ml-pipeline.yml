@@ -54,7 +54,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.10"
+          python-version: "3.14.0"
 
       - name: Cache pip packages
         uses: actions/cache@v4
@@ -68,6 +68,9 @@ jobs:
         run: pip install -r requirements.txt
 
       - name: Train model
+        run: python src/model_train.py
+
+      - name: Evaluate model
         run: python src/Run.py
 
       - name: Upload metrics as artifact
