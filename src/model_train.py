@@ -26,7 +26,7 @@ def load_and_prepare_data(config):
 
     df = pd.read_csv(config["data_url"])
 
-    # Drop Student_ID since it is not a useful feature
+    # Drop Student_ID
     df = df.drop(columns=["Student_ID"])
 
     # Handle missing values

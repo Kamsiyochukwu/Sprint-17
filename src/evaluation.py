@@ -19,13 +19,13 @@ from model_train import model
 def run_experiment(config):
     """Run a single experiment with the given config, tracked by MLflow."""
 
-    modelplk, X_test, y_test = model(config)
-
     # Set the experiment name so all runs are grouped together
     mlflow.set_experiment("student-dropout-prediction")
 
     # Start an MLflow run
     with mlflow.start_run():
+
+        modelplk, X_test, y_test = model(config)
 
         # ── Log all configuration as parameters ──
         mlflow.log_param("model_type", config["model_type"])
@@ -95,4 +95,4 @@ def run_experiment(config):
         print(f"\nMLflow Run ID: {run_id}")
         print("View this run in the UI: mlflow ui")
 
-    return run_id, metrics
+    return run_id, metrics, modelplk

@@ -1,0 +1,20 @@
+{
+  "data_url": "data/student_dropout_dataset.csv",
+  "test_size": 0.2,
+  "random_state": 50,
+  "n_estimators": 100,
+  "max_depth": 10,
+  "min_accuracy": 0.35,
+  "min_f1": 0.3,
+  "model_type": "logistic_regression",
+  "handle_missing": "median",
+  "scale_features": true,
+  "features_to_drop": [],
+  "lr_C": 1.0,
+  "rf_n_estimators": 100,
+  "rf_max_depth": "None",
+  "gb_n_estimators": 100,
+  "gb_learning_rate": 0.1,
+  "gb_max_depth": 3,
+  "target": "Dropout"
+}
