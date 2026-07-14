@@ -67,10 +67,16 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements.txt
 
-      - name: Train model
+      - name: Data preprocessing
+        run: python src/data_preprocessing.py
+
+      - name: Split model data
         run: python src/model_train.py
 
       - name: Evaluate model
+        run: python src/evaluation.py
+      
+      - name: Train model
         run: python src/Run.py
 
       - name: Upload metrics as artifact
