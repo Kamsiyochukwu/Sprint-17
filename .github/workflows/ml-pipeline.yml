@@ -71,6 +71,9 @@ jobs:
         run: pip install dvc
 
       - name: Pull data from DVC
+        env:
+          DAGSHUB_USERNAME: ${{ secrets.DAGSHUB_USERNAME }}
+          DAGSHUB_TOKEN: ${{ secrets.DAGSHUB_TOKEN }}
         run: dvc pull
 
       - name: Data preprocessing
