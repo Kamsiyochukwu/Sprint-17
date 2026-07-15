@@ -1,4 +1,6 @@
 [core]
-    remote = myremote
+    remote = origin
 ['remote "myremote"']
     url = /tmp/dvc-remote
+['remote "origin"']
+    url = https://dagshub.com/Kamsiyochukwu/Sprint-17.dvc
