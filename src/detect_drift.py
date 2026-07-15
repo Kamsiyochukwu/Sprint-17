@@ -10,6 +10,8 @@ with open("configs/config.yaml", "r") as f:
 # Load the data
 df = pd.read_csv(config["data_url"])
 
+df = df.drop(columns=["Student_ID"])
+
 def create_reference_and_production(df):
     """
     Split data into reference (training) and production batches.
