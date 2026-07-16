@@ -52,7 +52,7 @@ jobs:
         run: dvc pull
 
       - name: Run pytest
-        run: pytest test/ -v --tb=short
+        run: pytest tests/ -v --tb=short
 
   # ──────────────────────────────────────────────
   # Job 2: Train and evaluate model
