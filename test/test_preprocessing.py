@@ -1,10 +1,17 @@
+from unittest import result
 import pandas as pd
 import numpy as np
 import pytest
 import sys
+import yaml
+from sklearn.model_selection import train_test_split
 
 sys.path.insert(0, "src")
 from data_preprocessing import validate_dataframe, clean_data, encode_categoricals, check_data_quality
+from model_train import build_model
+
+with open("configs/config.yaml", "r") as f:
+    config = yaml.safe_load(f)
 
 @pytest.fixture
 def sample_data():
@@ -103,3 +110,59 @@ class TestDataQuality:
         report = check_data_quality(sample_data, ["Attendance_Rate"])
         assert report["Attendance_Rate_min"] == 65.0
         assert report["Attendance_Rate_max"] == 95.0
+
+class TestDataValidation:
+
+    def test_expected_columns_present():
+        df = pd.read_csv("data_url")
+        expected_cols = ["Age", "Attendance", "Study_Hours", "Dropout"]
+        for col in expected_cols:
+            assert col in df.columns
+
+    def test_target_variable_valid_values():
+        df = pd.read_csv("data_url")
+        valid_values = {0, 1}
+        actual_values = set(df["Dropout"].unique())
+        assert actual_values.issubset(valid_values)
+
+    def test_numeric_features_within_range():
+        df = pd.read_csv("data_url")
+        assert df["Attendance"].between(0, 100).all()
+        assert df["Age"].between(15, 60).all()
+
+class TestModelValidation:
+
+    def test_model_predictions_shape_and_type():
+        X = sample_data.drop(columns=["Dropout"])
+        y = sample_data["Dropout"]
+
+        X_train, X_test, y_train, y_test = train_test_split(
+        X, y,
+        test_size=config["test_size"],
+        random_state=config["random_state"],
+        stratify=y
+        )
+        model = build_model(config)
+        model.fit(X_train, y_train)
+
+        predictions = model.predict(X_test)
+        assert predictions.shape[0] == y_test.shape[0]
+        assert isinstance(predictions, np.ndarray)
+
+    def test_model_accuracy_threshold():
+        X = sample_data.drop(columns=["Dropout"])
+        y = sample_data["Dropout"]
+
+        X_train, X_test, y_train, y_test = train_test_split(
+        X, y,
+        test_size=config["test_size"],
+        random_state=config["random_state"],
+        stratify=y
+        )
+        model = build_model(config)
+        model.fit(X_train, y_train)
+
+        accuracy = model.score(X_test, y_test)
+        assert accuracy >= 0.7
+
+    
