@@ -1,0 +1,23 @@
+artifact_path: /Users/kamsi/Desktop/Sprint 17/mlruns/1/models/m-f5833b68ae1f4ca1ad6ef347c622cbdc/artifacts
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.skops
+    predict_fn: predict
+    python_version: 3.14.0
+  sklearn:
+    code: null
+    pickled_model: model.skops
+    serialization_format: skops
+    sklearn_version: 1.9.0
+    skops_trusted_types: null
+mlflow_version: 3.14.0
+model_id: m-f5833b68ae1f4ca1ad6ef347c622cbdc
+model_size_bytes: 15859
+model_uuid: m-f5833b68ae1f4ca1ad6ef347c622cbdc
+prompts: null
+run_id: 073b5f93a09c4c0fba849b0d83401dfc
+utc_time_created: '2026-07-16 03:12:59.164474'

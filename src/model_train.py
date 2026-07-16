@@ -95,22 +95,23 @@ def model(config):
     mlflow.log_param("n_features", X.shape[1])
 
     # ── Split data ──
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
-        test_size=config["test_size"],
-        random_state=config["random_state"],
-        stratify=y
-    )
+    for test_size in config["test_size"]:
+        X_train, X_test, y_train, y_test = train_test_split(
+            X, y,
+            test_size=test_size,
+            random_state=config["random_state"],
+            stratify=y
+        )
 
-    # ── Optionally scale features ──
-    if config["scale_features"]:
-        scaler = StandardScaler()
-        X_train = pd.DataFrame(scaler.fit_transform(X_train), columns=X_train.columns)
-        X_test = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns)
+        # ── Optionally scale features ──
+        if config["scale_features"]:
+            scaler = StandardScaler()
+            X_train = pd.DataFrame(scaler.fit_transform(X_train), columns=X_train.columns)
+            X_test = pd.DataFrame(scaler.transform(X_test), columns=X_test.columns)
 
-    # ── Train ──
-    model = build_model(config)
-    print(f"\nTraining {config['model_type']}...")
-    model.fit(X_train, y_train)
+        # ── Train ──
+        model = build_model(config)
+        print(f"\nTraining {config['model_type']}...")
+        model.fit(X_train, y_train)
     
     return model, X_test, y_test

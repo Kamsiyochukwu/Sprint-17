@@ -1,5 +1,5 @@
 "data_url": "data/student_dropout_dataset.csv"
-"test_size": 0.2
+"test_size": [0.2, 0.3, 0.4, 0.25, 0.15]
 "random_state": 50
 "n_estimators": 100
 "max_depth": 10
