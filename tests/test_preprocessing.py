@@ -138,14 +138,15 @@ class TestModelValidation:
 
         X = clean_data(X, ["Age", "Family_Income"], [])
 
-        X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
-        test_size=config["test_size"],
-        random_state=config["random_state"],
-        stratify=y
-        )
-        model = build_model(config)
-        model.fit(X_train, y_train)
+        for test_size in config["test_size"]:
+            X_train, X_test, y_train, y_test = train_test_split(
+            X, y,
+            test_size=test_size,
+            random_state=config["random_state"],
+            stratify=y
+            )
+            model = build_model(config)
+            model.fit(X_train, y_train)
 
         predictions = model.predict(X_test)
         assert predictions.shape[0] == y_test.shape[0]
@@ -157,16 +158,17 @@ class TestModelValidation:
 
         X = clean_data(X, ["Age", "Family_Income"], [])
 
-        X_train, X_test, y_train, y_test = train_test_split(
-        X, y,
-        test_size=config["test_size"],
-        random_state=config["random_state"],
-        stratify=y
-        )
-        model = build_model(config)
-        model.fit(X_train, y_train)
+        for test_size in config["test_size"]:
+            X_train, X_test, y_train, y_test = train_test_split(
+            X, y,
+            test_size=test_size,
+            random_state=config["random_state"],
+            stratify=y
+            )
+            model = build_model(config)
+            model.fit(X_train, y_train)
 
-        accuracy = model.score(X_test, y_test)
-        assert accuracy >= 0.5
+            accuracy = model.score(X_test, y_test)
+            assert accuracy >= 0.5
 
     
